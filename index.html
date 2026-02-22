@@ -3,260 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Intelligence Assistant</title>
+    <title>BI Assistant</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container { width: 100%; max-width: 450px; padding: 20px; }
-        .login-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .login-card h1 { text-align: center; color: #333; margin-bottom:10px; font-size: 28px; }
-        .login-card .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
-        .form-group input {
-            width: 100%; padding: 15px; border: 2px solid #e1e1e1;
-            border-radius: 10px; font-size: 16px; transition: border-color 0.3s;
-        }
-        .form-group input:focus { outline: none; border-color: #667eea; }
-        .login-btn {
-            width: 100%; padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; border: none; border-radius: 10px;
-            font-size: 16px; font-weight: 600; cursor: pointer;
-        }
-        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(102,126,234,0.4); }
-        .login-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-        .error-msg {
-            background: #fee; color: #c00; padding: 12px; border-radius: 8px;
-            margin-bottom: 20px; text-align: center; display: none;
-        }
-        .chat-container {
-            display: none; background: white; border-radius: 20px;
-            height: 80vh; max-height: 700px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            flex-direction: column; overflow: hidden;
-        }
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; padding: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .chat-header h2 { font-size: 18px; }
-        .user-info { font-size: 12px; opacity: 0.9; }
-        .logout-btn {
-            background: rgba(255,255,255,0.2); border: none; color: white;
-            padding: 8px 16px; border-radius: 20px; cursor: pointer;
-        }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; background: #f8f9fa; }
-        .message { margin-bottom: 15px; display: flex; }
-        .message.user { justify-content: flex-end; }
-        .message-bubble { max-width: 80%; padding: 12px 18px; border-radius: 18px; line-height: 1.5; }
-        .message.user .message-bubble {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; border-bottom-right-radius: 4px;
-        }
-        .message.assistant .message-bubble {
-            background: white; color: #333; border-bottom-left-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .chat-input-area {
-            padding: 20px; background: white; border-top: 1px solid #eee;
-            display: flex; gap: 10px;
-        }
-        .chat-input {
-            flex: 1; padding: 15px; border: 2px solid #e1e1e1;
-            border-radius: 25px; font-size: 16px; outline: none;
-        }
-        .chat-input:focus { border-color: #667eea; }
-        .send-btn {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none; border-radius: 50%; color: white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .send-btn:disabled { opacity: 0.5; }
-        .typing-indicator {
-            display: none; padding: 12px 18px; background: white;
-            border-radius: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin: 020px 15px; width: fit-content;
-        }
-        .typing-indicator span {
-            display: inline-block; width: 8px; height: 8px;
-            background: #667eea; border-radius: 50%; margin: 0 2px;
-            animation: typing 1s infinite;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        .welcome-message { text-align: center; padding: 40px 20px; color: #666; }
-        .welcome-message h3 { color: #333; margin-bottom:10px; }
-        .role-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; padding: 4px 12px; border-radius: 20px;
-            font-size:11px; font-weight: 600;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;justify-content:center;align-items:center}
+        .container{width:100%;max-width:450px;padding:20px}
+        .card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+        h1{text-align:center;color:#333;margin-bottom:10px;font-size:28px}
+        .subtitle{text-align:center;color:#666;margin-bottom:30px;font-size:14px}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;margin-bottom:8px;color:#333;font-weight:500}
+        .form-group input{width:100%;padding:15px;border:2px solid #e1e1e1;border-radius:10px;font-size:16px}
+        .form-group input:focus{outline:none;border-color:#667eea}
+        .btn{width:100%;padding:15px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(102,126,234,.4)}
+        .btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
+        .error{background:#fee;color:#c00;padding:12px;border-radius:8px;margin-bottom:20px;text-align:center;display:none}
+        .chat{display:none;background:#fff;border-radius:20px;height:80vh;max-height:700px;box-shadow:0 20px 60px rgba(0,0,0,.3);flex-direction:column;overflow:hidden}
+        .chat-header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:20px;display:flex;justify-content:space-between;align-items:center}
+        .chat-header h2{font-size:18px}
+        .user-info{font-size:12px;opacity:.9}
+        .logout{background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 16px;border-radius:20px;cursor:pointer}
+        .messages{flex:1;overflow-y:auto;padding:20px;background:#f8f9fa}
+        .msg{margin-bottom:15px;display:flex}
+        .msg.user{justify-content:flex-end}
+        .bubble{max-width:80%;padding:12px 18px;border-radius:18px;line-height:1.5}
+        .msg.user .bubble{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border-bottom-right-radius:4px}
+        .msg.bot .bubble{background:#fff;color:#333;border-bottom-left-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+        .input-area{padding:20px;background:#fff;border-top:1px solid #eee;display:flex;gap:10px}
+        .input-area input{flex:1;padding:15px;border:2px solid #e1e1e1;border-radius:25px;font-size:16px;outline:none}
+        .input-area input:focus{border-color:#667eea}
+        .send{width:50px;height:50px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border:none;border-radius:50%;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .send:disabled{opacity:.5}
+        .typing{display:none;padding:12px 18px;background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(0,0,0,.1);margin:0 20px 15px;width:fit-content}
+        .typing span{display:inline-block;width:8px;height:8px;background:#667eea;border-radius:50%;margin:0 2px;animation:bounce 1s infinite}
+        .typing span:nth-child(2){animation-delay:.2s}
+        .typing span:nth-child(3){animation-delay:.4s}
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+        .welcome{text-align:center;padding:40px 20px;color:#666}
+        .welcome h3{color:#333;margin-bottom:10px}
+        .badge{display:inline-block;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="login-card" id="loginPage">
-            <h1>📊 BI Assistant</h1>
-            <p class="subtitle">Business Intelligence at your fingertips</p>
-            <div class="error-msg" id="errorMsg"></div>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>📱 Phone Number</label>
-                    <input type="tel" id="phone" placeholder="e.g., 0764964349" required>
-                </div>
-                <div class="form-group">
-                    <label>🔒 Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="login-btn" id="loginBtn">Login</button>
-            </form>
+<div class="container">
+    <div class="card" id="login">
+        <h1>📊 BI Assistant</h1>
+        <p class="subtitle">Business Intelligence at your fingertips</p>
+        <div class="error" id="err"></div>
+        <form id="form">
+            <div class="form-group"><label>📱 Phone Number</label><input type="tel" id="phone" placeholder="e.g., 0764964349" required></div>
+            <div class="form-group"><label>🔒 Password</label><input type="password" id="pass" placeholder="Enter your password" required></div>
+            <button type="submit" class="btn" id="loginBtn">Login</button>
+        </form>
+    </div>
+    <div class="chat" id="chatBox">
+        <div class="chat-header">
+            <div><h2>📊 BI Assistant</h2><div class="user-info">Welcome, <span id="uname"></span> <span class="badge" id="urole"></span></div></div>
+            <button class="logout" onclick="logout()">Logout</button>
         </div>
-        <div class="chat-container" id="chatPage">
-            <div class="chat-header">
-                <div>
-                    <h2>📊 BI Assistant</h2>
-                    <div class="user-info">
-                        Welcome, <span id="userName"></span>
-                        <span class="role-badge" id="userRole"></span>
-                    </div>
-                </div>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="welcome-message">
-                    <h3>👋 Welcome!</h3>
-                    <p>Ask me anything about your customer data.</p>
-                </div>
-            </div>
-            <div class="typing-indicator" id="typingIndicator">
-                <span></span><span></span><span></span>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" class="chat-input" id="chatInput"
-                       placeholder="Ask a question..."
-                       onkeypress="if(event.key==='Enter')sendMessage()">
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 2L11 13M22 2L1522L11 13M11 13L29L222"/>
-                    </svg>
-                </button>
-            </div>
+        <div class="messages" id="msgs"><div class="welcome"><h3>👋 Welcome!</h3><p>Ask me anything about your customer data.</p></div></div>
+        <div class="typing" id="typing"><span></span><span></span><span></span></div>
+        <div class="input-area">
+            <input type="text" id="q" placeholder="Ask a question..." onkeypress="if(event.key==='Enter')send()">
+            <button class="send" id="sendBtn" onclick="send()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L1522L11 13M11 13L29L222"/></svg></button>
         </div>
     </div>
-    <script>
-        const API_URL = '/.netlify/functions/api';
-        let currentUser = null;
-        let userPassword = null;
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('phone').value.trim();
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const errorMsg = document.getElementById('errorMsg');
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Logging in...';
-            errorMsg.style.display = 'none';
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        phone,
-                        password,
-                        query: 'Verify my login and tell me my name, role, and how many customers I can access'
-                    })
-                });
-                const data = await response.json();
-                console.log('Login response:', data);
-                let userName = data.output?.userName || data.userName;
-                let userRole = data.output?.userRole || data.userRole;
-                let error = data.output?.error || data.error;
-                if (error) throw new Error(error);
-                if (userName && userRole) {
-                    currentUser = { phone, name: userName, role: userRole };
-                    userPassword = password;
-                    document.getElementById('loginPage').style.display = 'none';
-                    document.getElementById('chatPage').style.display = 'flex';
-                    document.getElementById('userName').textContent = userName;
-                    document.getElementById('userRole').textContent = userRole;
-                } else {
-                    throw new Error('Invalid credentials');
-                }
-            } catch (error) {
-                errorMsg.textContent = error.message;
-                errorMsg.style.display = 'block';
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Login';
-            }
-        });
-        function logout() {
-            currentUser = null;
-            userPassword = null;
-            document.getElementById('chatPage').style.display = 'none';
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('phone').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('chatMessages').innerHTML = '<div class="welcome-message"><h3>👋 Welcome!</h3><p>Ask me anything about your customer data.</p></div>';
-        }
-        async function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const query = input.value.trim();
-            if (!query) return;
-            addMessage(query, 'user');
-            input.value = '';
-            document.getElementById('typingIndicator').style.display = 'block';
-            document.getElementById('sendBtn').disabled = true;
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        phone: currentUser.phone,
-                        password: userPassword,
-                        query: query
-                    })
-                });
-                const data = await response.json();
-                const responseText = data.output?.response || data.output?.content || data.output || 'No response';
-                addMessage(typeof responseText === 'string' ? responseText : JSON.stringify(responseText), 'assistant');
-            } catch (error) {
-                addMessage('Error: ' + error.message, 'assistant');
-            } finally {
-                document.getElementById('typingIndicator').style.display = 'none';
-                document.getElementById('sendBtn').disabled = false;
-            }
-        }
-        function addMessage(text, sender) {
-            const messagesDiv = document.getElementById('chatMessages');
-            const welcome = messagesDiv.querySelector('.welcome-message');
-            if (welcome) welcome.remove();
-            const div = document.createElement('div');
-            div.className = 'message ' + sender;
-            div.innerHTML = '<div class="message-bubble">' + text.replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</div>';
-            messagesDiv.appendChild(div);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-    </script>
+</div>
+<script>
+const API='/.netlify/functions/api';
+let user=null,pw=null;
+document.getElementById('form').onsubmit=async e=>{
+    e.preventDefault();
+    const phone=document.getElementById('phone').value.trim();
+    const password=document.getElementById('pass').value;
+    const btn=document.getElementById('loginBtn');
+    const err=document.getElementById('err');
+    btn.disabled=true;btn.textContent='Logging in...';err.style.display='none';
+    try{
+        const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,password,query:'Verify login and tell me my name, role, customer count'})});
+        const d=await r.json();
+        console.log('Response:',d);
+        const name=d.output?.userName||d.userName;
+        const role=d.output?.userRole||d.userRole;
+        const error=d.output?.error||d.error;
+        if(error)throw new Error(error);
+        if(name&&role){
+            user={phone,name,role};pw=password;
+            document.getElementById('login').style.display='none';
+            document.getElementById('chatBox').style.display='flex';
+            document.getElementById('uname').textContent=name;
+            document.getElementById('urole').textContent=role;
+        }else throw new Error('Invalid credentials');
+    }catch(e){err.textContent=e.message;err.style.display='block';}
+    finally{btn.disabled=false;btn.textContent='Login';}
+};
+function logout(){
+    user=null;pw=null;
+    document.getElementById('chatBox').style.display='none';
+    document.getElementById('login').style.display='block';
+    document.getElementById('phone').value='';
+    document.getElementById('pass').value='';
+    document.getElementById('msgs').innerHTML='<div class="welcome"><h3>👋 Welcome!</h3><p>Ask me anything about your customer data.</p></div>';
+}
+async function send(){
+    const input=document.getElementById('q');
+    const query=input.value.trim();
+    if(!query)return;
+    addMsg(query,'user');input.value='';
+    document.getElementById('typing').style.display='block';
+    document.getElementById('sendBtn').disabled=true;
+    try{
+        const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:user.phone,password:pw,query})});
+        const d=await r.json();
+        const txt=d.output?.response||d.output?.content||d.output||'No response';
+        addMsg(typeof txt==='string'?txt:JSON.stringify(txt),'bot');
+    }catch(e){addMsg('Error: '+e.message,'bot');}
+    finally{document.getElementById('typing').style.display='none';document.getElementById('sendBtn').disabled=false;}
+}
+function addMsg(t,s){
+    const m=document.getElementById('msgs');
+    const w=m.querySelector('.welcome');if(w)w.remove();
+    const d=document.createElement('div');d.className='msg '+s;
+    d.innerHTML='<div class="bubble">'+t.replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</div>';
+    m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+</script>
 </body>
 </html>
