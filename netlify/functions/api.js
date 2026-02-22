@@ -1,4 +1,3 @@
-const https = require('https');
 const API_URL = 'https://sim.so/api/workflows/6d850a2e-3689-4a43-bcbe-b619919b1737/execute';
 const API_KEY = 'sk-sim-EpG5AIRbA2pvBn8YfwlwZrHps9FJZPdX';
 exports.handler = async (event) => {
@@ -14,8 +13,10 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
+  console.log('Request body:', event.body);
   try {
-    const data = await makeRequest(API_URL, {
+    console.log('Calling Sim API...');
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,32 +24,20 @@ exports.handler = async (event) => {
       },
       body: event.body
     });
-    return { statusCode: 200, headers, body: JSON.stringify(data) };
-  } catch (error) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
-  }
-};
-function makeRequest(url, options) {
-  return new Promise((resolve, reject) => {
-    const urlObj = new URL(url);
-    const req = https.request({
-      hostname: urlObj.hostname,
-      path: urlObj.pathname,
-      method: options.method,
-      headers: options.headers
-    }, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(new Error('Invalid JSON response'));
-        }
-      });
-    });
-    req.on('error', reject);
-    req.write(options.body);
-    req.end();
-  });
-}
+    console.log('Response status:', response.status);
+    const text = await response.text();
+    console.log('Response text:', text.substring(0, 500));
+    // Try to parse as JSON
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      console.log('JSON parse error:', parseError.message);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'Invalid response from API',
+          details: text.substring(0, 200)
+        })
+  
