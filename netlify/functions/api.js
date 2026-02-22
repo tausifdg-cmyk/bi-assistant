@@ -1,3 +1,4 @@
+const https = require('https');
 const API_URL = 'https://sim.so/api/workflows/6d850a2e-3689-4a43-bcbe-b619919b1737/execute';
 const API_KEY = 'sk-sim-EpG5AIRbA2pvBn8YfwlwZrHps9FJZPdX';
 exports.handler = async (event) => {
@@ -14,7 +15,7 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
   try {
-    const response = await fetch(API_URL, {
+    const data = await makeRequest(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,9 +23,32 @@ exports.handler = async (event) => {
       },
       body: event.body
     });
-    const data = await response.json();
     return { statusCode: 200, headers, body: JSON.stringify(data) };
   } catch (error) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
   }
 };
+function makeRequest(url, options) {
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    const req = https.request({
+      hostname: urlObj.hostname,
+      path: urlObj.pathname,
+      method: options.method,
+      headers: options.headers
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(new Error('Invalid JSON response'));
+        }
+      });
+    });
+    req.on('error', reject);
+    req.write(options.body);
+    req.end();
+  });
+}
